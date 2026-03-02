@@ -1,0 +1,150 @@
+.dashboard-page {
+  min-height: 100vh;
+  padding: 120px 6% 80px;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+}
+
+/* sidebar */
+.dashboard-sidebar {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  padding: 22px;
+  height: fit-content;
+}
+
+.sidebar-title {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.sidebar-item {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background: rgba(124, 58, 237, 0.15);
+}
+
+.sidebar-item.active {
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  color: white;
+}
+
+.sidebar-item.back {
+  margin-top: 14px;
+  color: #94a3b8;
+}
+
+/* right */
+.dashboard-content h1 {
+  margin-bottom: 6px;
+}
+
+.dashboard-sub {
+  color: #94a3b8;
+  margin-bottom: 28px;
+}
+
+/* booking rows */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.booking-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+}
+
+.booking-row:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124, 58, 237, 0.45);
+}
+
+.booking-row img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.booking-info h4 {
+  margin-bottom: 4px;
+}
+
+.booking-info p {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.booking-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.status.confirmed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status.pending {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.price {
+  font-weight: 600;
+}
+
+/* eye button */
+.eye-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.6);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.eye-btn:hover {
+  border-color: #7c3aed;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+}

@@ -1,0 +1,253 @@
+/* ===============================
+   PAGE BASE
+================================ */
+.create-page {
+  min-height: 100vh;
+  padding: 120px 6% 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===============================
+   MOUSE SPOTLIGHT
+================================ */
+.create-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(124, 58, 237, 0.16),
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===============================
+   BACKGROUND GRID
+================================ */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+  opacity: 0.35;
+  animation: gridMove 22s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes gridMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(42px); }
+}
+
+/* ===============================
+   FLOATING ORBS
+================================ */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 18s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #7c3aed, transparent 70%);
+  top: 10%;
+  left: 5%;
+}
+
+.orb-2 {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, #3b82f6, transparent 70%);
+  bottom: 5%;
+  right: 5%;
+  animation-delay: 4s;
+}
+
+@keyframes orbFloat {
+  0%,100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+
+/* ===============================
+   NOISE TEXTURE
+================================ */
+.bg-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===============================
+   WRAPPER
+================================ */
+.create-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   GLASS CARD
+================================ */
+.create-card {
+  padding: 40px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.55),
+    0 0 60px rgba(124, 58, 237, 0.08);
+  animation: fadeUp 0.5s ease;
+  transition: all 0.25s ease;
+}
+
+.create-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124, 58, 237, 0.45);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.create-sub {
+  color: #94a3b8;
+  margin-bottom: 28px;
+}
+
+/* ===============================
+   UPLOAD BOX (single image)
+================================ */
+.upload-box.single {
+  margin-bottom: 28px;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  border-radius: 16px;
+  padding: 18px;
+  background: rgba(2, 6, 23, 0.55);
+  transition: all 0.25s ease;
+}
+
+.upload-box.single:hover {
+  border-color: #7c3aed;
+  background: rgba(2, 6, 23, 0.75);
+}
+
+.upload-box.single label {
+  display: block;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.upload-box.single input {
+  width: 100%;
+  color: #cbd5e1;
+}
+
+.upload-box.single img {
+  width: 100%;
+  margin-top: 14px;
+  border-radius: 12px;
+  object-fit: cover;
+  max-height: 180px;
+}
+
+/* ===============================
+   FORM GRID
+================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* ===============================
+   INPUT GROUP (🔥 FIXED)
+================================ */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group.full {
+  grid-column: span 2;
+}
+
+.input-group label {
+  font-size: 13px;
+  color: #a9b4d0;
+  font-weight: 500;
+  position: static; /* 🔥 CRITICAL FIX */
+}
+
+/* ===============================
+   INPUTS (🔥 FIXED SELECTORS)
+================================ */
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.75);
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.18);
+}
+
+/* textarea sizing */
+.input-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.create-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .input-group.full {
+    grid-column: span 1;
+  }
+}

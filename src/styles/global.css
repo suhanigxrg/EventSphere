@@ -1,0 +1,97 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+body {
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(124, 58, 237, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(37, 99, 235, 0.12),
+      transparent 40%
+    ),
+    #070b1a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  width: 92%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+/* ===== NAVBAR BASE ===== */
+.glass-nav {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  width: 100%;
+  height: 72px;
+
+  background: rgba(10, 14, 35, 0.55);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  width: 100%;
+}
+
+/* ===== PRIMARY BUTTON ===== */
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+}
+
+/* ===== CARD ===== */
+.card {
+  background: #0f172a;
+  border-radius: 18px;
+  padding: 18px;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ===== PAGE SPACING ===== */
+.page-padding {
+  padding: 40px 0;
+}
+
