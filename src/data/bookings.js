@@ -1,3 +1,8 @@
+const event1 = "/src/assets/event1.jpg";
+const event2 = "/src/assets/event2.jpg";
+const event3 = "/src/assets/event3.jpg";
+const event4 = "/src/assets/event4.jpg";
+
 const bookings = [
   {
     id: 1,
@@ -6,7 +11,7 @@ const bookings = [
     tickets: 2,
     status: "confirmed",
     price: 178,
-    image: "/src/assets/event1.jpg",
+    image: event1,
   },
   {
     id: 2,
@@ -15,7 +20,7 @@ const bookings = [
     tickets: 1,
     status: "confirmed",
     price: 299,
-    image: "/src/assets/event2.jpg",
+    image: event2,
   },
   {
     id: 3,
@@ -24,7 +29,7 @@ const bookings = [
     tickets: 1,
     status: "pending",
     price: 60,
-    image: "/src/assets/event3.jpg",
+    image: event3,
   },
 ];
 

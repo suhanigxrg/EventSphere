@@ -126,6 +126,7 @@ const events = [
     image: event4,
 
     description:
+    
       "Dance all night at the hottest beach EDM party of the summer.",
 
     longDescription:

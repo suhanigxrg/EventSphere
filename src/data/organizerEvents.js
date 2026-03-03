@@ -1,3 +1,8 @@
+const event1 = "/src/assets/event1.jpg";
+const event2 = "/src/assets/event2.jpg";
+const event3 = "/src/assets/event3.jpg";
+const event4 = "/src/assets/event4.jpg";
+
 const organizerEvents = [
   {
     id: 1,
@@ -7,7 +12,7 @@ const organizerEvents = [
     sold: 1250,
     revenue: 111250,
     status: "published",
-    image: "/src/assets/event1.jpg",
+    image: event1,
   },
   {
     id: 2,
@@ -17,7 +22,7 @@ const organizerEvents = [
     sold: 820,
     revenue: 245180,
     status: "draft",
-    image: "/src/assets/event2.jpg",
+    image: event2,
   },
   {
     id: 3,
@@ -27,7 +32,7 @@ const organizerEvents = [
     sold: 540,
     revenue: 64800,
     status: "published",
-    image: "/src/assets/event4.jpg",
+    image: event3,
   },
 ];
 
