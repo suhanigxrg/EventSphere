@@ -1,9 +1,8 @@
 import Navbar from "../components/Navbar";
 import "./Organizer.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import organizerEvents from "../data/organizerEvents";
-import organizerBookings from "../data/organizerBookings";
+import { getOrganizerEvents, getBookings } from "../utils/storage";
+import { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -24,37 +23,47 @@ import {
 function Organizer() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [eventsList, setEventsList] = useState([]);
+const [bookingsList, setBookingsList] = useState([]);
+
 
   // ================= METRICS =================
-  const totalRevenue = organizerBookings.reduce(
+
+    const totalRevenue = bookingsList.reduce(
     (sum, b) => sum + b.amount,
     0
   );
-
-  const ticketsSold = organizerBookings.reduce(
+  const ticketsSold = bookingsList.reduce(
     (sum, b) => sum + b.tickets,
     0
   );
 
-  const totalEvents = organizerEvents.length;
 
-  const activeEvents = organizerEvents.filter(
+
+  const totalEvents = eventsList.length;
+
+  const activeEvents = eventsList.filter(
     (e) => e.status === "published"
   ).length;
 
   // 🔥 group bookings by event
-  const bookingsByEvent = organizerEvents.map((event) => ({
+  const bookingsByEvent = eventsList.map((event) => ({
     ...event,
-    bookings: organizerBookings.filter(
-      (b) => b.event === event.title
+    bookings: bookingsList.filter(
+      (b) => b.eventId === event.id
     ),
   }));
 
 
+useEffect(() => {
+  setEventsList(getOrganizerEvents());
+  setBookingsList(getBookings());
+}, []);
+
   // ================= CHART DATA =================
 
 // revenue per event
-const revenueData = organizerEvents.map((e) => ({
+const revenueData = eventsList.map((e) => ({
   name: e.title.slice(0, 8),
   revenue: e.revenue || 0,
   tickets: e.sold || 0,
@@ -72,7 +81,7 @@ const monthlyData = [
 
 // category distribution
 const categoryMap = {};
-organizerEvents.forEach((e) => {
+eventsList.forEach((e) => {
   categoryMap[e.category] = (categoryMap[e.category] || 0) + 1;
 });
 
@@ -180,7 +189,7 @@ const PIE_COLORS = ["#7c3aed", "#3b82f6", "#ec4899", "#22c55e"];
                   </div>
 
                   <div className="table-body">
-                    {organizerEvents.map((event) => (
+                    {eventsList.map((event) => (
                       <div key={event.id} className="event-row">
                         <img src={event.image} alt={event.title} />
 
@@ -301,7 +310,7 @@ const PIE_COLORS = ["#7c3aed", "#3b82f6", "#ec4899", "#22c55e"];
   <div className="chart-card">
     <h3>Revenue by Event</h3>
     <div className="chart-box">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={revenueData}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
           <XAxis dataKey="name" stroke="#94a3b8" />
@@ -317,7 +326,7 @@ const PIE_COLORS = ["#7c3aed", "#3b82f6", "#ec4899", "#22c55e"];
   <div className="chart-card">
     <h3>Monthly Revenue Trend</h3>
     <div className="chart-box">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={monthlyData}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
           <XAxis dataKey="month" stroke="#94a3b8" />
@@ -339,7 +348,7 @@ const PIE_COLORS = ["#7c3aed", "#3b82f6", "#ec4899", "#22c55e"];
   <div className="chart-card">
     <h3>Events by Category</h3>
     <div className="chart-box">
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={pieData}

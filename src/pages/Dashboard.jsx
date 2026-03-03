@@ -2,10 +2,11 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import bookings from "../data/bookings";
 import "./Dashboard.css";
-
+import { getCurrentUser, getUserBookings } from "../utils/storage";
 function Dashboard() {
   const navigate = useNavigate();
-
+  const user = getCurrentUser();
+  const bookings = user ? getUserBookings(user.id) : [];
   return (
     <>
       <Navbar />

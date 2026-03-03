@@ -2,6 +2,8 @@ import Navbar from "../components/Navbar";
 import "./Checkout.css";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import events from "../data/events";
+import { addBooking, getCurrentUser } from "../utils/storage";
+import { useEffect } from "react";
 
 function Checkout() {
   const { id } = useParams();
@@ -20,6 +22,34 @@ function Checkout() {
   if (!event || !ticket) {
     return <div style={{ padding: 40 }}>Invalid checkout</div>;
   }
+
+  const user = getCurrentUser();
+
+useEffect(() => {
+  if(!user) {
+    navigate("/login");
+  }
+}, [user, navigate]);
+
+const handlePurchase = () => {
+  const user = getCurrentUser();
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  addBooking({
+    id: Date.now(),
+    userId: user.id,
+    eventId: event.id,
+    tickets: qty,
+    amount: Number(total),
+    status: "confirmed",
+  });
+
+  navigate(`/ticket-success/${event.id}`);
+};
 
   return (
     <>
@@ -93,7 +123,7 @@ function Checkout() {
         </div>
 
        <button className="primary-btn full"
-            onClick={() => navigate(`/ticket-success/${event.id}`)}>Complete Purchase
+            onClick={handlePurchase}>Complete Purchase
         </button>
       </div>
     </div>

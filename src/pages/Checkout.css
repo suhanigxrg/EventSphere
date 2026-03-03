@@ -174,3 +174,29 @@
     top: 0;
   }
 }
+
+/* ===============================
+   RESPONSIVE — CHECKOUT
+================================ */
+
+@media (max-width: 1024px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .order-summary {
+    position: static;
+  }
+}
+
+/* MOBILE FORM */
+@media (max-width: 640px) {
+  .checkout-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-card {
+    padding: 18px;
+  }
+}

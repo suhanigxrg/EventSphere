@@ -2,14 +2,18 @@ import Navbar from "../components/Navbar";
 import "./CreateEvent.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import organizerEvents from "../data/organizerEvents";
+import {
+  addOrganizerEvent,
+  getCurrentUser,
+  getOrganizerEvents,
+  updateOrganizerEvent,
+} from "../utils/storage";
 
 function CreateEvent() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const editId = params.get("edit");
 
-  // mouse glow
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   const [form, setForm] = useState({
@@ -21,44 +25,85 @@ function CreateEvent() {
     price: "",
     description: "",
     imagePreview: null,
-    status: "draft",
+    status: "active",
   });
 
-  // preload edit
+  // ✅ preload edit
   useEffect(() => {
-    if (editId) {
-      const existing = organizerEvents.find(
-        (e) => e.id === Number(editId)
-      );
-      if (existing) {
-        setForm((f) => ({
-          ...f,
-          title: existing.title,
-          date: existing.date,
-          venue: existing.venue,
-          price: existing.revenue || "",
-          status: existing.status,
-        }));
-      }
+    if (!editId) return;
+
+    const events = getOrganizerEvents();
+    const existing = events.find((e) => e.id === Number(editId));
+
+    if (existing) {
+      setForm({
+        title: existing.title || "",
+        date: existing.date || "",
+        time: existing.time || "",
+        venue: existing.venue || "",
+        category: existing.category || "Music",
+        price: existing.price || "",
+        description: existing.description || "",
+        imagePreview: existing.image || null,
+        status: existing.status || "active",
+      });
     }
   }, [editId]);
 
+  // ✅ input change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // ✅ image handler
   const handleImage = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setForm({
-        ...form,
-        imagePreview: URL.createObjectURL(file),
-      });
-    }
+    if (!file) return;
+
+    setForm({
+      ...form,
+      imagePreview: URL.createObjectURL(file),
+    });
   };
 
+  // ✅ SUBMIT (REAL FIX)
   const handleSubmit = () => {
-    alert(editId ? "Event Updated (demo)" : "Event Created (demo)");
+    const user = getCurrentUser();
+
+    if (!user) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
+
+    if (!form.title || !form.date || !form.venue) {
+      alert("Please fill required fields");
+      return;
+    }
+
+    const payload = {
+      id: editId ? Number(editId) : Date.now(),
+      organizerId: user.id,
+      title: form.title,
+      category: form.category,
+      date: form.date,
+      time: form.time,
+      venue: form.venue,
+      price: Number(form.price),
+      image: form.imagePreview,
+      description: form.description,
+      attendees: 0,
+      sold: 0,
+      revenue: 0,
+      status: "published",
+    };
+
+    if (editId) {
+      updateOrganizerEvent(Number(editId), payload);
+    } else {
+      addOrganizerEvent(payload);
+    }
+
     navigate("/organizer");
   };
 
@@ -80,36 +125,23 @@ function CreateEvent() {
           "--my": mouse.y + "px",
         }}
       >
-        {/* background layers */}
-        <div className="bg-grid"></div>
-        <div className="bg-orb orb-1"></div>
-        <div className="bg-orb orb-2"></div>
-        <div className="bg-noise"></div>
-
         <div className="create-wrapper">
           <div className="create-card">
             <h1>{editId ? "Edit Event" : "Create Event"}</h1>
-            <p className="create-sub">
-              Fill the details to publish your event
-            </p>
 
-            {/* 🔥 IMAGE (ONLY ONE — matches your cards) */}
             <div className="upload-box single">
               <label>Event Image</label>
               <input type="file" onChange={handleImage} />
-
               {form.imagePreview && (
                 <img src={form.imagePreview} alt="preview" />
               )}
             </div>
 
-            {/* 🔥 MAIN FORM */}
             <div className="form-grid">
               <div className="input-group">
                 <label>Event Title</label>
                 <input
                   name="title"
-                  placeholder="Neon Nights Music Festival"
                   value={form.title}
                   onChange={handleChange}
                 />
@@ -119,7 +151,6 @@ function CreateEvent() {
                 <label>Date</label>
                 <input
                   name="date"
-                  placeholder="Mar 15, 2026"
                   value={form.date}
                   onChange={handleChange}
                 />
@@ -129,7 +160,6 @@ function CreateEvent() {
                 <label>Time</label>
                 <input
                   name="time"
-                  placeholder="7:00 PM"
                   value={form.time}
                   onChange={handleChange}
                 />
@@ -139,7 +169,6 @@ function CreateEvent() {
                 <label>Venue</label>
                 <input
                   name="venue"
-                  placeholder="Madison Square Garden"
                   value={form.venue}
                   onChange={handleChange}
                 />
@@ -163,7 +192,6 @@ function CreateEvent() {
                 <label>Ticket Price ($)</label>
                 <input
                   name="price"
-                  placeholder="89"
                   value={form.price}
                   onChange={handleChange}
                 />
@@ -173,7 +201,6 @@ function CreateEvent() {
                 <label>Description</label>
                 <textarea
                   name="description"
-                  placeholder="Describe your event experience..."
                   value={form.description}
                   onChange={handleChange}
                 />
@@ -188,10 +215,7 @@ function CreateEvent() {
                 Cancel
               </button>
 
-              <button
-                className="primary-btn"
-                onClick={handleSubmit}
-              >
+              <button className="primary-btn" onClick={handleSubmit}>
                 {editId ? "Update Event" : "Create Event"}
               </button>
             </div>

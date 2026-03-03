@@ -4,10 +4,12 @@
 }
 
 .dashboard-container {
-  display: grid;
   grid-template-columns: 260px 1fr;
-  gap: 32px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
 }
+
 
 /* sidebar */
 .dashboard-sidebar {
@@ -17,6 +19,8 @@
   border-radius: 18px;
   padding: 22px;
   height: fit-content;
+  width: 260px;
+  flex-shrink: 0;
 }
 
 .sidebar-title {
@@ -147,4 +151,42 @@
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+}
+
+/* =================================
+   DASHBOARD — TABLET
+================================= */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .dashboard-sidebar button,
+  .dashboard-sidebar .side-item {
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .dashboard-main {
+    width: 100%;
+  }
+}
+
+/* =================================
+   DASHBOARD — MOBILE
+================================= */
+@media (max-width: 640px) {
+  .booking-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }

@@ -95,3 +95,37 @@ body {
   padding: 40px 0;
 }
 
+
+
+/* ===============================
+   GLOBAL RESPONSIVE HELPERS
+================================ */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* tablets */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* large phones */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* small phones */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+}
+

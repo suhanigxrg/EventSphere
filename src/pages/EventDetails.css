@@ -210,3 +210,39 @@
   width: 100%;
   margin-top: 12px;
 }
+
+/* ===============================
+   RESPONSIVE — EVENT DETAILS
+================================ */
+
+@media (max-width: 1024px) {
+  .event-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .event-right {
+    position: static;
+  }
+}
+
+/* MOBILE HERO FIX */
+@media (max-width: 640px) {
+  .event-hero {
+    height: 300px;
+  }
+
+  .event-hero-overlay h1 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .event-meta {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .booking-card {
+    padding: 18px;
+  }
+}

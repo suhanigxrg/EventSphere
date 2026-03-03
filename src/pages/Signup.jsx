@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import "./Signup.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveUser } from "../utils/storage";
 
 function Signup() {
   const navigate = useNavigate();
@@ -26,15 +27,33 @@ function Signup() {
     setError("");
   };
 
-  const handleSubmit = () => {
-    if (form.password !== form.confirm) {
-      setError("Passwords do not match");
-      return;
-    }
+const handleSubmit = () => {
+  if (!form.name || !form.email || !form.password) {
+    setError("Please fill all fields");
+    return;
+  }
 
-    // 🔥 backend will come later
-    navigate("/dashboard");
-  };
+  if (form.password !== form.confirm) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  // ✅ save user
+  saveUser({
+    name: form.name,
+    email: form.email,
+    password: form.password,
+    gender: "",
+    avatar: "",
+  });
+
+  // ✅ auto login after signup
+  loginUser(form.email, form.password);
+
+  // ✅ go to home (NOT dashboard)
+  navigate("/");
+};
+
 
   return (
     <>
