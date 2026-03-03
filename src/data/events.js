@@ -1,3 +1,7 @@
+import event1 from "../assets/event1.jpg";
+import event2 from "../assets/event2.jpg";
+import event3 from "../assets/event3.jpg";
+import event3 from "../assets/event4.jpg";
 const events = [
   {
     id: 1,
@@ -9,7 +13,7 @@ const events = [
     price: 89,
     rating: 4.8,
     attendees: 12500,
-    image: "/src/assets/event1.jpg",
+    image: event1,
 
     description:
       "Experience the ultimate electronic music festival featuring world-class DJs, immersive light shows, and an electrifying atmosphere.",
@@ -46,7 +50,7 @@ const events = [
     price: 299,
     rating: 4.9,
     attendees: 8200,
-    image: "/src/assets/event2.jpg",
+    image: event2,
 
     description:
       "Join industry leaders and innovators at the biggest tech conference of the year.",
@@ -83,7 +87,7 @@ const events = [
     price: 60,
     rating: 4.5,
     attendees: 18000,
-    image: "/src/assets/event3.jpg",
+    image: event3,
 
     description:
       "Run through the heart of the city in this exciting annual marathon.",
@@ -119,7 +123,7 @@ const events = [
     price: 120,
     rating: 4.9,
     attendees: 9500,
-    image: "/src/assets/event4.jpg",
+    image: event4,
 
     description:
       "Dance all night at the hottest beach EDM party of the summer.",
