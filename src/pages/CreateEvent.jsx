@@ -25,10 +25,9 @@ function CreateEvent() {
     price: "",
     description: "",
     imagePreview: null,
-    status: "active",
   });
 
-  // ✅ preload edit
+  // Load event if editing
   useEffect(() => {
     if (!editId) return;
 
@@ -40,33 +39,34 @@ function CreateEvent() {
         title: existing.title || "",
         date: existing.date || "",
         time: existing.time || "",
-        venue: existing.venue || "",
+        venue: existing.location || "",
         category: existing.category || "Music",
         price: existing.price || "",
         description: existing.description || "",
         imagePreview: existing.image || null,
-        status: existing.status || "active",
       });
     }
   }, [editId]);
 
-  // ✅ input change
+  // Input change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ✅ image handler
+  // Image upload
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const imageUrl = URL.createObjectURL(file);
+
     setForm({
       ...form,
-      imagePreview: URL.createObjectURL(file),
+      imagePreview: imageUrl,
     });
   };
 
-  // ✅ SUBMIT (REAL FIX)
+  // Submit
   const handleSubmit = () => {
     const user = getCurrentUser();
 
@@ -83,18 +83,47 @@ function CreateEvent() {
 
     const payload = {
       id: editId ? Number(editId) : Date.now(),
+
       organizerId: user.id,
+
       title: form.title,
       category: form.category,
+
       date: form.date,
       time: form.time,
-      venue: form.venue,
+
+      location: form.venue,
+
       price: Number(form.price),
+
       image: form.imagePreview,
+
       description: form.description,
+
+      rating: 4.5,
+
       attendees: 0,
       sold: 0,
       revenue: 0,
+
+      ticketTypes: [
+        {
+          name: "General Admission",
+          price: Number(form.price),
+        },
+      ],
+
+      organizer: {
+        name: user.name || "Organizer",
+        role: "Host",
+        avatarLetter: (user.name || "O")[0],
+      },
+
+      venueDetails: {
+        name: form.venue,
+        capacity: 500,
+      },
+
       status: "published",
     };
 
@@ -129,14 +158,17 @@ function CreateEvent() {
           <div className="create-card">
             <h1>{editId ? "Edit Event" : "Create Event"}</h1>
 
+            {/* Image Upload */}
             <div className="upload-box single">
               <label>Event Image</label>
-              <input type="file" onChange={handleImage} />
+              <input type="file" accept="image/*" onChange={handleImage} />
+
               {form.imagePreview && (
                 <img src={form.imagePreview} alt="preview" />
               )}
             </div>
 
+            {/* Form */}
             <div className="form-grid">
               <div className="input-group">
                 <label>Event Title</label>
@@ -150,6 +182,7 @@ function CreateEvent() {
               <div className="input-group">
                 <label>Date</label>
                 <input
+                  type="date"
                   name="date"
                   value={form.date}
                   onChange={handleChange}
@@ -159,6 +192,7 @@ function CreateEvent() {
               <div className="input-group">
                 <label>Time</label>
                 <input
+                  type="time"
                   name="time"
                   value={form.time}
                   onChange={handleChange}
@@ -185,12 +219,14 @@ function CreateEvent() {
                   <option>Technology</option>
                   <option>Sports</option>
                   <option>Business</option>
+                  <option>Art</option>
                 </select>
               </div>
 
               <div className="input-group">
                 <label>Ticket Price ($)</label>
                 <input
+                  type="number"
                   name="price"
                   value={form.price}
                   onChange={handleChange}
@@ -207,6 +243,7 @@ function CreateEvent() {
               </div>
             </div>
 
+            {/* Buttons */}
             <div className="create-actions">
               <button
                 className="ghost-btn"

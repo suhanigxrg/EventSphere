@@ -2,29 +2,38 @@ import Navbar from "../components/Navbar";
 import "./TicketSuccess.css";
 import { useParams, useNavigate } from "react-router-dom";
 import events from "../data/events";
-import bookings from "../data/bookings";
+import {
+  getOrganizerEvents,
+  getBookings
+} from "../utils/storage";
 import { QRCodeCanvas } from "qrcode.react";
 
 function TicketSuccess() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  /* 🔥 find booking first */
-  const booking = bookings.find((b) => b.id === Number(id));
+  // 🔥 merge events
+  const organizerEvents = getOrganizerEvents();
+  const allEvents = [...events, ...organizerEvents];
 
-  /* safety early */
-  if (!booking) {
-    return <div style={{ padding: 40 }}>Ticket not found</div>;
-  }
-
-  /* 🔥 then find its event */
-  const event = events.find((e) => e.id === booking.id);
+  // 🔥 find event
+  const event = allEvents.find((e) => e.id.toString() === id);
 
   if (!event) {
     return <div style={{ padding: 40 }}>Event not found</div>;
   }
 
-  const ticketCode = `EVENT:${event.id}-BOOKING:${booking.id}-USER:ES`;
+  // 🔥 find latest booking for this event
+  const bookings = getBookings();
+  const booking = bookings
+    .filter((b) => b.eventId.toString() === id)
+    .sort((a, b) => b.id - a.id)[0];
+
+  if (!booking) {
+    return <div style={{ padding: 40 }}>Ticket not found</div>;
+  }
+
+  const ticketCode = `EVENT:${event.id}-BOOKING:${booking.id}-USER:${booking.userId}`;
 
   return (
     <>
@@ -37,7 +46,7 @@ function TicketSuccess() {
         }}
       >
         <div className="success-wrapper">
-          {/* success icon */}
+
           <div className="success-icon">✓</div>
 
           <h1>Booking Confirmed!</h1>
@@ -45,7 +54,7 @@ function TicketSuccess() {
             Your ticket has been sent to your email
           </p>
 
-          {/* 🎟 ticket card */}
+          {/* 🎟 Ticket Card */}
           <div className="ticket-card">
             <img
               src={event.image}
@@ -55,17 +64,16 @@ function TicketSuccess() {
 
             <div className="ticket-info">
               <h3>{event.title}</h3>
+
               <p>📅 {event.date}</p>
-              <p>📍 {event.location}</p>
+
+              <p>📍 {event.location || event.venue}</p>
 
               <div className="ticket-id">
                 <span>Ticket ID</span>
+
                 <strong>
-                  ES-
-                  {Math.random()
-                    .toString(36)
-                    .substring(2, 8)
-                    .toUpperCase()}
+                  ES-{booking.id.toString().slice(-6)}
                 </strong>
               </div>
             </div>
@@ -81,7 +89,7 @@ function TicketSuccess() {
             </div>
           </div>
 
-          {/* ✅ buttons OUTSIDE ticket-card */}
+          {/* Buttons */}
           <div className="success-actions">
             <button
               className="ghost-btn"
@@ -97,6 +105,7 @@ function TicketSuccess() {
               Explore More
             </button>
           </div>
+
         </div>
       </div>
     </>

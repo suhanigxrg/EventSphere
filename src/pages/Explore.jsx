@@ -4,8 +4,9 @@ import EventCard from "../components/EventCard";
 import "./Explore.css";
 import Skeleton from "../components/Skeleton";
 import { useEffect, useState } from "react";
-
 import { useLocation } from "react-router-dom";
+import { getOrganizerEvents } from "../utils/storage";
+
 function Explore() {
 
   const [loading, setLoading] = useState(true);
@@ -16,13 +17,21 @@ function Explore() {
   }, []);
 
   const location = useLocation();
-const params = new URLSearchParams(location.search);
-const query = params.get("q")?.toLowerCase() || "";
+  const params = new URLSearchParams(location.search);
+  const query = params.get("q")?.toLowerCase() || "";
 
-const filteredEvents = events.filter((event) =>
-  event.title.toLowerCase().includes(query) ||
-  event.category.toLowerCase().includes(query)
-);
+  // ✅ get events created by organizers
+  const organizerEvents = getOrganizerEvents() || [];
+
+  // ✅ combine default events + created events
+  const allEvents = [...events, ...organizerEvents];
+
+  // ✅ filter events based on search
+  const filteredEvents = allEvents.filter((event) =>
+    event.title?.toLowerCase().includes(query) ||
+    event.category?.toLowerCase().includes(query)
+  );
+
   return (
     <>
       <Navbar />
@@ -67,19 +76,19 @@ const filteredEvents = events.filter((event) =>
             {/* RIGHT GRID */}
             <div className="explore-grid">
               {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="event-card">
-                    <Skeleton height="180px" radius="14px" />
-                    <div style={{ padding: "12px" }}>
-                      <Skeleton height="18px" width="70%" />
-                      <div style={{ height: 8 }} />
-                      <Skeleton height="14px" width="40%" />
-                  </div>
-                </div>
-              ))
-          : (filteredEvents.map((event) => (
-                        <EventCard key={event.id} event={event} />
-                     ) ))}
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="event-card">
+                      <Skeleton height="180px" radius="14px" />
+                      <div style={{ padding: "12px" }}>
+                        <Skeleton height="18px" width="70%" />
+                        <div style={{ height: 8 }} />
+                        <Skeleton height="14px" width="40%" />
+                      </div>
+                    </div>
+                  ))
+                : filteredEvents.map((event) => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
             </div>
           </div>
         </div>

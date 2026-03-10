@@ -1,7 +1,7 @@
 import event1 from "../assets/event1.jpg";
 import event2 from "../assets/event2.jpg";
 import event3 from "../assets/event3.jpg";
-import event3 from "../assets/event4.jpg";
+import event4 from "../assets/event4.jpg";
 const events = [
   {
     id: 1,

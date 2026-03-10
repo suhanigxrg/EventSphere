@@ -20,8 +20,13 @@ function EventCard({ event }) {
         <p className="event-location">{event.location}</p>
 
         <div className="event-bottom">
-          <span className="price">${event.price}</span>
-          <span className="rating">⭐ {event.rating}</span>
+          <span className="price">
+            ${event.price ?? event.ticketTypes?.[0]?.price ?? 0}
+          </span>
+
+          <span className="rating">
+            ⭐ {event.rating ?? 4.5}
+          </span>
         </div>
       </div>
     </div>

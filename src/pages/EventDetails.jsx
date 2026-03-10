@@ -3,13 +3,17 @@ import "./EventDetails.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import events from "../data/events";
+import { getOrganizerEvents } from "../utils/storage";
 
 function EventDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 🔥 find correct event
-  const event = events.find((e) => e.id === Number(id));
+  // get events from both sources
+  const organizerEvents = getOrganizerEvents();
+  const allEvents = [...events, ...organizerEvents];
+
+  const event = allEvents.find((e) => e.id.toString() === id);
 
   if (!event) {
     return <div style={{ padding: 40 }}>Event not found</div>;
@@ -17,20 +21,21 @@ function EventDetails() {
 
   const serviceFee = 4.45;
   const [qty, setQty] = useState(1);
-  const total = (event.price * qty + serviceFee).toFixed(2);
 
-
-  const [selectedTicket, setSelectedTicket] = useState(
-    event.ticketTypes[0]
+  const [selectedTicket] = useState(
+    event.ticketTypes?.[0] || {
+      name: "General Admission",
+      price: event.price,
+    }
   );
 
+  const total = (event.price * qty + serviceFee).toFixed(2);
 
   return (
     <>
       <Navbar />
 
       <div className="event-details-page">
-        {/* HERO */}
         <div className="event-hero">
           <img src={event.image} alt={event.title} />
 
@@ -48,84 +53,79 @@ function EventDetails() {
 
             <div className="event-meta">
               <span>📅 {event.date}</span>
-              <span>📍 {event.location}</span>
-              <span>⭐ {event.rating}</span>
+              <span>📍 {event.location || event.venue}</span>
+              <span>⭐ {event.rating || "4.5"}</span>
             </div>
           </div>
         </div>
 
-        {/* CONTENT */}
         <div className="event-content">
           {/* LEFT */}
           <div className="event-left">
-  {/* ABOUT */}
-  <div className="glass-card">
-    <h3>About This Event</h3>
-    <p className="about-short">{event.description}</p>
-    <p className="about-long">{event.longDescription}</p>
-  </div>
 
-  {/* EVENT INFO GRID */}
-  <div className="glass-card info-grid">
-    <h3>Event Information</h3>
+            <div className="glass-card">
+              <h3>About This Event</h3>
+              <p className="about-short">{event.description}</p>
+              <p className="about-long">
+                {event.longDescription || event.description}
+              </p>
+            </div>
 
-    <div className="info-items">
-      <div className="info-item">
-        <span className="info-label">Date</span>
-        <span>{event.date}</span>
-      </div>
+            <div className="glass-card info-grid">
+              <h3>Event Information</h3>
 
-      <div className="info-item">
-        <span className="info-label">Time</span>
-        <span>{event.time}</span>
-      </div>
+              <div className="info-items">
+                <div className="info-item">
+                  <span className="info-label">Date</span>
+                  <span>{event.date}</span>
+                </div>
 
-      <div className="info-item">
-        <span className="info-label">Venue</span>
-        <span>{event.venueDetails.name}</span>
-      </div>
+                <div className="info-item">
+                  <span className="info-label">Time</span>
+                  <span>{event.time || "TBA"}</span>
+                </div>
 
-      <div className="info-item">
-        <span className="info-label">Capacity</span>
-        <span>{event.venueDetails.capacity}</span>
-      </div>
+                <div className="info-item">
+                  <span className="info-label">Venue</span>
+                  <span>{event.venueDetails?.name || event.venue}</span>
+                </div>
 
-      <div className="info-item">
-        <span className="info-label">Attending</span>
-        <span>{event.attendees.toLocaleString()}</span>
-      </div>
-    </div>
-  </div>
+                <div className="info-item">
+                  <span className="info-label">Capacity</span>
+                  <span>{event.venueDetails?.capacity || "N/A"}</span>
+                </div>
 
-  {/* ORGANIZER */}
-  <div className="glass-card organizer-card">
-    <h3>Organizer</h3>
+                <div className="info-item">
+                  <span className="info-label">Attending</span>
+                  <span>{(event.attendees || 0).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
 
-    <div className="organizer-info">
-      <div className="organizer-avatar">
-        {event.organizer.avatarLetter}
-      </div>
+            <div className="glass-card organizer-card">
+              <h3>Organizer</h3>
 
-      <div>
-        <h4>{event.organizer.name}</h4>
-        <p>{event.organizer.role}</p>
-      </div>
-    </div>
-  </div>
-</div>
+              <div className="organizer-info">
+                <div className="organizer-avatar">
+                  {event.organizer?.avatarLetter || "E"}
+                </div>
+
+                <div>
+                  <h4>{event.organizer?.name || "Event Organizer"}</h4>
+                  <p>{event.organizer?.role || "Host"}</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
 
           {/* RIGHT BOOKING */}
           <div className="event-right">
             <div className="booking-card">
               <h3>Book Tickets</h3>
 
-              {/* quantity */}
               <div className="quantity-row">
-                <button
-                  onClick={() =>
-                    setQty((q) => Math.max(1, q - 1))
-                  }
-                >
+                <button onClick={() => setQty((q) => Math.max(1, q - 1))}>
                   −
                 </button>
 
@@ -136,13 +136,10 @@ function EventDetails() {
                 </button>
               </div>
 
-              {/* price breakdown */}
               <div className="price-break">
                 <div className="ticket-row">
-                  <span>{qty} × General Admission</span>
-                  <span>
-                    ${(event.price * qty).toFixed(2)}
-                  </span>
+                  <span>{qty} × {selectedTicket.name}</span>
+                  <span>${(event.price * qty).toFixed(2)}</span>
                 </div>
 
                 <div className="ticket-row">
@@ -156,23 +153,27 @@ function EventDetails() {
                 </div>
               </div>
 
-             <button className="primary-btn full"
+              <button
+                className="primary-btn full"
                 onClick={() =>
-                    navigate(`/checkout/${event.id}`, {
+                  navigate(`/checkout/${event.id}`, {
                     state: {
-                        ticket: selectedTicket,
-                        qty,
+                      event: event,
+                      ticket: selectedTicket,
+                      qty: qty,
                     },
-                    })
-                }>
+                  })
+                }
+              >
                 Book Now
-            </button>
+              </button>
 
               <button className="ghost-btn full">
                 Share Event
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </>
